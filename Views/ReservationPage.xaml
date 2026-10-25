@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PaniersFermiers.ViewModels"
+             x:Class="PaniersFermiers.Views.ReservationPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource PfFond}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- En-tête -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="12,40,20,8">
+            <Button Style="{StaticResource BoutonLien}" WidthRequest="44" HeightRequest="44"
+                    SemanticProperties.Description="Retour"
+                    Command="{Binding RetourCommand}">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcRetour}"
+                                     Color="{StaticResource PfTexte}" Size="20" />
+                </Button.ImageSource>
+            </Button>
+            <Label Grid.Column="1" Text="Mon panier" FontSize="18" FontAttributes="Bold"
+                   TextColor="{StaticResource PfTexte}" VerticalOptions="Center" />
+        </Grid>
+
+        <!-- ===== Panier rempli ===== -->
+        <ScrollView Grid.Row="1" IsVisible="{Binding ContenuVisible}">
+            <VerticalStackLayout Padding="20,8,20,24">
+
+                <Label Text="Votre commande" Style="{StaticResource TitreEcran}" />
+                <Label Text="Vérifiez vos produits frais avant de choisir votre point de retrait."
+                       Style="{StaticResource SousTitre}" Margin="0,4,0,16" />
+
+                <!-- Lignes du panier -->
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Lignes}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource Carte}" Margin="0,0,0,10">
+                                <Grid ColumnDefinitions="60,*,Auto" ColumnSpacing="12" Padding="12">
+
+                                    <Border BackgroundColor="{StaticResource PfVertClair}" StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 14" WidthRequest="60" HeightRequest="60"
+                                            VerticalOptions="Start">
+                                        <Label Text="{Binding Emoji}" FontSize="30"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Nom}" FontSize="16" FontAttributes="Bold"
+                                               TextColor="{StaticResource PfTexte}" />
+                                        <Label Text="{Binding PrixKgTexte}" FontSize="12"
+                                               TextColor="{StaticResource PfTexteSecondaire}" />
+                                        <HorizontalStackLayout Spacing="8" Margin="0,6,0,0">
+                                            <Button Text="−" Style="{StaticResource BoutonRond}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ReservationViewModel}}, Path=DiminuerCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    IsEnabled="{Binding PeutDiminuer}" />
+                                            <Label Text="{Binding QuantiteTexte}" FontSize="14" FontAttributes="Bold"
+                                                   WidthRequest="56" HorizontalTextAlignment="Center"
+                                                   TextColor="{StaticResource PfTexte}" VerticalOptions="Center" />
+                                            <Button Text="+" Style="{StaticResource BoutonRond}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ReservationViewModel}}, Path=AugmenterCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    IsEnabled="{Binding PeutAugmenter}" />
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+
+                                    <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="6">
+                                        <Label Text="{Binding TotalTexte}" FontSize="16" FontAttributes="Bold"
+                                               HorizontalTextAlignment="End"
+                                               TextColor="{StaticResource PfVertFonce}" />
+                                        <Button Style="{StaticResource BoutonLien}" WidthRequest="44"
+                                                HorizontalOptions="End"
+                                                SemanticProperties.Description="Retirer du panier"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ReservationViewModel}}, Path=SupprimerCommand}"
+                                                CommandParameter="{Binding .}">
+                                            <Button.ImageSource>
+                                                <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcPoubelle}"
+                                                                 Color="{StaticResource PfErreur}" Size="16" />
+                                            </Button.ImageSource>
+                                        </Button>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <!-- Actions sur le panier -->
+                <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
+                    <Button Text="+ Ajouter d'autres produits" Style="{StaticResource BoutonLien}"
+                            HorizontalOptions="Start" Command="{Binding RetourCommand}" />
+                    <Button Grid.Column="1" Text="Vider le panier" Style="{StaticResource BoutonLien}"
+                            TextColor="{StaticResource PfErreur}" Command="{Binding ViderCommand}" />
+                </Grid>
+
+                <!-- Zéro emballage -->
+                <Border BackgroundColor="#EAF3EA" StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                        Padding="14" Margin="0,12,0,0">
+                    <VerticalStackLayout Spacing="4">
+                        <Label FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PfTexte}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{StaticResource IcSac}" FontFamily="FaSolid" FontAttributes="None" TextColor="{StaticResource PfVert}" />
+                                    <Span Text="&#160;&#160;Démarche zéro emballage" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Text="Pensez à apporter votre cabas, votre panier ou des sacs en tissu lors du retrait."
+                               FontSize="13" TextColor="{StaticResource PfTexteSecondaire}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Détail du règlement -->
+                <Border Style="{StaticResource Carte}" Margin="0,16,0,0">
+                    <VerticalStackLayout Padding="16" Spacing="10">
+                        <Label Text="Détail du règlement" FontSize="15" FontAttributes="Bold"
+                               TextColor="{StaticResource PfTexte}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="{Binding NombreArticlesTexte}" Style="{StaticResource Texte}" />
+                            <Label Grid.Column="1" Text="{Binding TotalTexte}" FontSize="14"
+                                   FontAttributes="Bold" TextColor="{StaticResource PfTexte}" />
+                        </Grid>
+
+                        <Label Text="{Binding PoidsTexte}" FontSize="12"
+                               TextColor="{StaticResource PfTexteSecondaire}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Frais de service / point relais (offerts)" Style="{StaticResource Texte}" />
+                            <Label Grid.Column="1" Text="0 FCFA" FontSize="14" FontAttributes="Bold"
+                                   TextColor="{StaticResource PfVert}" />
+                        </Grid>
+
+                        <BoxView HeightRequest="1" Color="{StaticResource PfBordure}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout>
+                                <Label Text="Total à régler au retrait" FontSize="16" FontAttributes="Bold"
+                                       TextColor="{StaticResource PfTexte}" />
+                                <Label Text="Espèces, Orange Money ou MTN MoMo" FontSize="12"
+                                       TextColor="{StaticResource PfTexteSecondaire}" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Text="{Binding TotalTexte}" FontSize="20"
+                                   FontAttributes="Bold" TextColor="{StaticResource PfVertFonce}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Minimum de commande -->
+                <Border Style="{StaticResource BandeauErreur}" IsVisible="{Binding MinimumNonAtteint}">
+                    <Label Text="{Binding MessageMinimum}" Style="{StaticResource TexteErreur}" Margin="0" />
+                </Border>
+
+                <Button Text="Choisir le point de retrait →" Style="{StaticResource BoutonPrincipal}"
+                        Command="{Binding ChoisirPointCommand}"
+                        IsEnabled="{Binding MinimumAtteint}" Margin="0,20,0,0" />
+                <Label FontSize="12" TextColor="{StaticResource PfTexteSecondaire}"
+                       HorizontalOptions="Center" Margin="0,10,0,0">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{StaticResource IcCadenas}" FontFamily="FaSolid" FontAttributes="None" />
+                            <Span Text="&#160;&#160;Réservation sans débit immédiat" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ===== Panier vide ===== -->
+        <VerticalStackLayout Grid.Row="1" IsVisible="{Binding PanierVide}" Padding="20,60,20,0" Spacing="12">
+            <Label Text="{StaticResource IcPanier}" FontFamily="FaSolid" FontSize="56"
+                   TextColor="{StaticResource PfDesactive}" HorizontalOptions="Center" />
+            <Label Text="Votre panier est vide" Style="{StaticResource TitreEcran}" FontSize="22"
+                   HorizontalOptions="Center" />
+            <Label Text="Ajoutez des fruits et légumes frais pour composer votre panier."
+                   Style="{StaticResource SousTitre}" HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+            <Button Text="Voir les produits" Style="{StaticResource BoutonPrincipal}"
+                    Command="{Binding RetourCommand}" Margin="0,12,0,0" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

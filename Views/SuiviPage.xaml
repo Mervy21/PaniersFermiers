@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PaniersFermiers.ViewModels"
+             x:Class="PaniersFermiers.Views.SuiviPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource PfFond}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- En-tête -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="12,40,20,8">
+            <Button Style="{StaticResource BoutonLien}" WidthRequest="44" HeightRequest="44"
+                    SemanticProperties.Description="Retour"
+                    Command="{Binding RetourCommand}">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcRetour}"
+                                     Color="{StaticResource PfTexte}" Size="20" />
+                </Button.ImageSource>
+            </Button>
+            <Label Grid.Column="1" Text="Mes commandes" FontSize="18" FontAttributes="Bold"
+                   TextColor="{StaticResource PfTexte}" VerticalOptions="Center" />
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,8,20,24" Spacing="16">
+
+                <!-- Chargement -->
+                <ActivityIndicator IsRunning="{Binding EstChargement}" IsVisible="{Binding EstChargement}"
+                                   Color="{StaticResource PfVertFonce}" Margin="0,30,0,0" />
+
+                <!-- État vide -->
+                <VerticalStackLayout IsVisible="{Binding AfficherVide}" Spacing="12" Margin="0,40,0,0">
+                    <Label Text="{StaticResource IcBoiteOuverte}" FontFamily="FaSolid" FontSize="52"
+                           TextColor="{StaticResource PfDesactive}" HorizontalOptions="Center" />
+                    <Label Text="Aucune commande pour le moment" Style="{StaticResource TitreEcran}"
+                           FontSize="20" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                    <Button Text="Voir les paniers" Style="{StaticResource BoutonPrincipal}"
+                            Command="{Binding VoirPaniersCommand}" Margin="0,12,0,0" />
+                </VerticalStackLayout>
+
+                <!-- Détail de la commande affichée -->
+                <VerticalStackLayout IsVisible="{Binding AfficherDetail}" Spacing="16">
+
+                    <!-- Référence + statut -->
+                    <Border Style="{StaticResource Carte}">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Padding="16">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="RÉFÉRENCE" FontSize="12"
+                                       TextColor="{StaticResource PfTexteSecondaire}" />
+                                <Label Text="{Binding ReferenceAffichee}" FontSize="18" FontAttributes="Bold"
+                                       TextColor="{StaticResource PfTexte}" />
+                                <Label Text="{Binding DateTexte}" FontSize="12" TextColor="{StaticResource PfTexteSecondaire}" />
+                                <Label Text="{Binding ResumeTexte}" FontSize="13"
+                                       TextColor="{StaticResource PfTexteSecondaire}" />
+                            </VerticalStackLayout>
+                            <Border Grid.Column="1" BackgroundColor="{StaticResource PfVertClair}"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="10,6"
+                                    VerticalOptions="Start">
+                                <Label Text="{Binding StatutTexte}" FontSize="12" FontAttributes="Bold"
+                                       TextColor="{StaticResource PfVertFonce}" />
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <!-- Chronologie -->
+                    <Border Style="{StaticResource Carte}">
+                        <VerticalStackLayout Padding="16">
+                            <Label Text="Évolution de la commande" FontSize="15" FontAttributes="Bold"
+                                   TextColor="{StaticResource PfTexte}" />
+
+                            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto" RowDefinitions="Auto,Auto"
+                                  RowSpacing="6" Margin="0,16,0,0">
+
+                                <!-- Cercle 1 -->
+                                <Border Grid.Row="0" Grid.Column="0" WidthRequest="30" HeightRequest="30"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 15"
+                                        BackgroundColor="{StaticResource PfGris}" HorizontalOptions="Center">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding Etape1Atteinte}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource PfVert}" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Label Text="{StaticResource IcCheck}" FontFamily="FaSolid" FontSize="12" TextColor="White"
+                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                           IsVisible="{Binding Etape1Atteinte}" />
+                                </Border>
+
+                                <!-- Ligne 1 -->
+                                <BoxView Grid.Row="0" Grid.Column="1" HeightRequest="3" VerticalOptions="Center"
+                                         Color="{StaticResource PfGris}">
+                                    <BoxView.Triggers>
+                                        <DataTrigger TargetType="BoxView" Binding="{Binding Etape2Atteinte}" Value="True">
+                                            <Setter Property="Color" Value="{StaticResource PfVert}" />
+                                        </DataTrigger>
+                                    </BoxView.Triggers>
+                                </BoxView>
+
+                                <!-- Cercle 2 -->
+                                <Border Grid.Row="0" Grid.Column="2" WidthRequest="30" HeightRequest="30"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 15"
+                                        BackgroundColor="{StaticResource PfGris}" HorizontalOptions="Center">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding Etape2Atteinte}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource PfVert}" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Label Text="{StaticResource IcCheck}" FontFamily="FaSolid" FontSize="12" TextColor="White"
+                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                           IsVisible="{Binding Etape2Atteinte}" />
+                                </Border>
+
+                                <!-- Ligne 2 -->
+                                <BoxView Grid.Row="0" Grid.Column="3" HeightRequest="3" VerticalOptions="Center"
+                                         Color="{StaticResource PfGris}">
+                                    <BoxView.Triggers>
+                                        <DataTrigger TargetType="BoxView" Binding="{Binding Etape3Atteinte}" Value="True">
+                                            <Setter Property="Color" Value="{StaticResource PfVert}" />
+                                        </DataTrigger>
+                                    </BoxView.Triggers>
+                                </BoxView>
+
+                                <!-- Cercle 3 -->
+                                <Border Grid.Row="0" Grid.Column="4" WidthRequest="30" HeightRequest="30"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 15"
+                                        BackgroundColor="{StaticResource PfGris}" HorizontalOptions="Center">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding Etape3Atteinte}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource PfVert}" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Label Text="{StaticResource IcCheck}" FontFamily="FaSolid" FontSize="12" TextColor="White"
+                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                           IsVisible="{Binding Etape3Atteinte}" />
+                                </Border>
+
+                                <!-- Libellés -->
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="Center">
+                                    <Label Text="Validée" FontSize="13" FontAttributes="Bold"
+                                           HorizontalTextAlignment="Center" TextColor="{StaticResource PfTexte}" />
+                                    <Label Text="{Binding Sous1}" FontSize="12" HorizontalTextAlignment="Center"
+                                           TextColor="{StaticResource PfVert}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="2" HorizontalOptions="Center">
+                                    <Label Text="Récoltée" FontSize="13" FontAttributes="Bold"
+                                           HorizontalTextAlignment="Center" TextColor="{StaticResource PfTexte}" />
+                                    <Label Text="{Binding Sous2}" FontSize="12" HorizontalTextAlignment="Center"
+                                           TextColor="{StaticResource PfVert}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Row="1" Grid.Column="4" HorizontalOptions="Center">
+                                    <Label Text="Au relais" FontSize="13" FontAttributes="Bold"
+                                           HorizontalTextAlignment="Center" TextColor="{StaticResource PfTexte}" />
+                                    <Label Text="{Binding Sous3}" FontSize="12" HorizontalTextAlignment="Center"
+                                           TextColor="{StaticResource PfVert}" />
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <Label Text="{Binding RetraitTexte}" FontSize="13" Margin="0,18,0,0"
+                                   TextColor="{StaticResource PfTexteSecondaire}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <!-- Contenu de la commande -->
+                    <Border Style="{StaticResource Carte}">
+                        <VerticalStackLayout Padding="16" Spacing="8">
+                            <Label FontSize="15" FontAttributes="Bold" TextColor="{StaticResource PfTexte}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{StaticResource IcPanier}" FontFamily="FaSolid" FontAttributes="None" TextColor="{StaticResource PfVert}" />
+                                        <Span Text="&#160;&#160;Contenu de la commande" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Text="{Binding ArticlesTexte}" FontSize="13"
+               TextColor="{StaticResource PfTexteSecondaire}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+
+                    <!-- Actions -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <Button Text="Au calendrier" Style="{StaticResource Chip}"
+                                HeightRequest="48" CornerRadius="12" FontAttributes="Bold"
+                                TextColor="{StaticResource PfVertFonce}"
+                                ContentLayout="Left,8"
+                                Command="{Binding CalendrierCommand}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcCalendrierAjout}"
+                                                 Color="{StaticResource PfVertFonce}" Size="15" />
+                            </Button.ImageSource>
+                        </Button>
+                        <Button Grid.Column="1" Text="Contacter" Style="{StaticResource Chip}"
+                                HeightRequest="48" CornerRadius="12" FontAttributes="Bold"
+                                TextColor="{StaticResource PfVertFonce}"
+                                ContentLayout="Left,8"
+                                Command="{Binding ContacterCommand}">
+                            <Button.ImageSource>
+                                <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcTelephone}"
+                                                 Color="{StaticResource PfVertFonce}" Size="15" />
+                            </Button.ImageSource>
+                        </Button>
+                    </Grid>
+                    <!-- NOUVEAU : annulation (visible seulement avant la récolte) -->
+                    <Button Text="Annuler cette commande" Style="{StaticResource BoutonLien}"
+                            TextColor="{StaticResource PfErreur}"
+                            ContentLayout="Left,6"
+                            HorizontalOptions="Center" IsVisible="{Binding PeutAnnuler}"
+                            Command="{Binding AnnulerCommand}">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcCroix}"
+                                             Color="{StaticResource PfErreur}" Size="13" />
+                        </Button.ImageSource>
+                    </Button>
+
+
+                    <!-- Bouton de démonstration -->
+                    <Button Text="Simuler l'étape suivante (démo)" Style="{StaticResource BoutonLien}"
+                            HorizontalOptions="Center" IsVisible="{Binding PeutAvancer}"
+                            Command="{Binding AvancerCommand}" />
+                </VerticalStackLayout>
+
+                <!-- Liste de toutes les commandes -->
+                <VerticalStackLayout IsVisible="{Binding AfficherListe}" Spacing="10">
+                    <Label Text="Toutes mes commandes" FontSize="16" FontAttributes="Bold"
+                           TextColor="{StaticResource PfTexte}" />
+
+                    <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Commandes}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource Carte}">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SuiviViewModel}}, Path=SelectionnerCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Padding="14">
+                                        <VerticalStackLayout>
+                                            <Label Text="{Binding ReferenceAffichee}" FontSize="15"
+                                                   FontAttributes="Bold" TextColor="{StaticResource PfTexte}" />
+                                            <Label Text="{Binding ResumeTexte}" FontSize="12"
+                                                   TextColor="{StaticResource PfTexteSecondaire}" />
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="1">
+                                            <Label Text="{Binding TotalTexte}" FontSize="14" FontAttributes="Bold"
+                                                   HorizontalTextAlignment="End"
+                                                   TextColor="{StaticResource PfVertFonce}" />
+                                            <Label Text="{Binding StatutTexte}" FontSize="12"
+                                                   HorizontalTextAlignment="End"
+                                                   TextColor="{StaticResource PfTexteSecondaire}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+    
+</ContentPage>

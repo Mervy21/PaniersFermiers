@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PaniersFermiers.ViewModels"
+             x:Class="PaniersFermiers.Views.RetraitPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource PfFond}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- En-tête -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="12,40,20,8">
+            <Button Style="{StaticResource BoutonLien}" WidthRequest="44" HeightRequest="44"
+                    SemanticProperties.Description="Retour"
+                    Command="{Binding RetourCommand}">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcRetour}"
+                                     Color="{StaticResource PfTexte}" Size="20" />
+                </Button.ImageSource>
+            </Button>
+            <Label Grid.Column="1" Text="Point relais" FontSize="18" FontAttributes="Bold"
+                   TextColor="{StaticResource PfTexte}" VerticalOptions="Center" />
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,8,20,24">
+
+                <Label Text="Point de retrait" Style="{StaticResource TitreEcran}" />
+                <Label Text="Sélectionnez votre lieu de collecte direct producteur"
+                       Style="{StaticResource SousTitre}" Margin="0,4,0,16" />
+
+                <!-- Chargement des points -->
+                <ActivityIndicator IsRunning="{Binding ChargementPoints}"
+                                   IsVisible="{Binding ChargementPoints}"
+                                   Color="{StaticResource PfVertFonce}" Margin="0,30,0,0" />
+
+                <!-- Erreur -->
+                <VerticalStackLayout IsVisible="{Binding AErreur}" Spacing="12">
+                    <Label Text="{Binding ErreurPoints}" Style="{StaticResource TexteErreur}"
+                           HorizontalOptions="Center" />
+                    <Button Text="Réessayer" Style="{StaticResource BoutonPrincipal}"
+                            Command="{Binding ReessayerCommand}" />
+                </VerticalStackLayout>
+
+                <!-- Aucun point -->
+                <Label Text="Aucun point de retrait disponible pour le moment."
+                       IsVisible="{Binding AucunPoint}" Style="{StaticResource SousTitre}"
+                       HorizontalOptions="Center" />
+
+                <!-- Contenu -->
+                <VerticalStackLayout IsVisible="{Binding ContenuVisible}">
+
+                    <!-- Liste des points -->
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Points}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource Carte}" Margin="0,0,0,10">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding EstSelectionne}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource PfVertClair}" />
+                                            <Setter Property="Stroke" Value="{StaticResource PfVert}" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RetraitViewModel}}, Path=SelectionnerPointCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <VerticalStackLayout Padding="14" Spacing="8">
+                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                            <Border BackgroundColor="#EAF3EA" StrokeThickness="0"
+                                                    StrokeShape="RoundRectangle 22"
+                                                    WidthRequest="44" HeightRequest="44" VerticalOptions="Center">
+                                                <Label Text="{Binding Icone}" FontFamily="FaSolid" FontSize="18"
+                                                       TextColor="{StaticResource PfVertFonce}"
+                                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Border>
+                                            <VerticalStackLayout Grid.Column="1">
+                                                <Label Text="{Binding Nom}" FontSize="16" FontAttributes="Bold"
+                                                       TextColor="{StaticResource PfTexte}" />
+                                                <Label Text="{Binding Detail}" FontSize="13"
+                                                       TextColor="{StaticResource PfTexteSecondaire}" />
+                                            </VerticalStackLayout>
+                                            <Label Grid.Column="2" Text="{StaticResource IcCheck}" FontFamily="FaSolid" FontSize="18"
+                                                   TextColor="{StaticResource PfVertFonce}"
+                                                   IsVisible="{Binding EstSelectionne}" VerticalOptions="Center" />
+                                        </Grid>
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Label Text="{StaticResource IcCalendrier}" FontFamily="FaSolid" FontSize="12"
+                                                   TextColor="{StaticResource PfVert}" VerticalOptions="Center" />
+                                            <Label Text="{Binding JourHoraires}" FontSize="13"
+                                                   TextColor="{StaticResource PfTexte}" VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <!-- Titre créneaux -->
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,16,0,10">
+                        <Label FontSize="18" FontAttributes="Bold" TextColor="{StaticResource PfTexte}" VerticalOptions="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{StaticResource IcHorloge}" FontFamily="FaSolid" FontAttributes="None" TextColor="{StaticResource PfVert}" />
+                                    <Span Text="&#160;&#160;Créneau de retrait" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Grid.Column="1" BackgroundColor="{StaticResource PfGris}" StrokeThickness="0"
+                                StrokeShape="RoundRectangle 6" Padding="8,4" IsVisible="{Binding APeriode}">
+                            <Label Text="{Binding PeriodeTexte}" FontSize="12"
+                                   TextColor="{StaticResource PfTexteSecondaire}" />
+                        </Border>
+                    </Grid>
+
+                    <ActivityIndicator IsRunning="{Binding ChargementCreneaux}"
+                                       IsVisible="{Binding ChargementCreneaux}"
+                                       Color="{StaticResource PfVertFonce}" />
+
+                    <Label Text="Aucun créneau disponible pour ce point."
+                           IsVisible="{Binding AucunCreneau}" Style="{StaticResource SousTitre}" />
+
+                    <!-- Liste des créneaux -->
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding Creneaux}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource Carte}" Margin="0,0,0,8">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding Complet}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource PfGris}" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Border" Binding="{Binding EstSelectionne}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource PfVertFonce}" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RetraitViewModel}}, Path=SelectionnerCreneauCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="*,Auto" Padding="16,14">
+                                        <Label Text="{Binding Libelle}" FontSize="16" FontAttributes="Bold"
+                                               TextColor="{StaticResource PfTexte}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Complet}" Value="True">
+                                                    <Setter Property="TextColor" Value="{StaticResource PfPlaceholder}" />
+                                                    <Setter Property="TextDecorations" Value="Strikethrough" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding EstSelectionne}" Value="True">
+                                                    <Setter Property="TextColor" Value="White" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                        <Label Grid.Column="1" Text="{Binding Etat}" FontSize="13"
+                                               TextColor="{StaticResource PfTexteSecondaire}">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding EstSelectionne}" Value="True">
+                                                    <Setter Property="TextColor" Value="White" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <!-- Message d'erreur créneau -->
+                    <Label Text="{Binding MessageCreneau}" IsVisible="{Binding AMessageCreneau}"
+                           Style="{StaticResource TexteErreur}" />
+
+                    <Border BackgroundColor="#EAF3EA" StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                            Padding="12,10" Margin="0,8,0,0">
+                        <Label Text="Votre panier sera conservé au frais jusqu'à la fin du créneau."
+                               FontSize="13" TextColor="{StaticResource PfTexteSecondaire}" />
+                    </Border>
+
+                    <!-- Récapitulatif panier -->
+                    <Border Style="{StaticResource Carte}" Margin="0,16,0,0">
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="14">
+                            <Label Text="{StaticResource IcBoite}" FontFamily="FaSolid" FontSize="22"
+                                   TextColor="{StaticResource PfVertFonce}" VerticalOptions="Center" />
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="{Binding NomPanierTexte}" FontSize="14" FontAttributes="Bold"
+                                       TextColor="{StaticResource PfTexte}" />
+                                <Label Text="{Binding DetailPanierTexte}" FontSize="12"
+                                       TextColor="{StaticResource PfTexteSecondaire}" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="2" Text="{Binding TotalTexte}" FontSize="15"
+                                   FontAttributes="Bold" TextColor="{StaticResource PfVertFonce}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <Button Text="Continuer vers le paiement →" Style="{StaticResource BoutonPrincipal}"
+                            Command="{Binding ContinuerCommand}"
+                            IsEnabled="{Binding PeutContinuer}" Margin="0,20,0,0" />
+                    <Label FontSize="12" TextColor="{StaticResource PfTexteSecondaire}"
+                           HorizontalOptions="Center" Margin="0,10,0,0">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{StaticResource IcBouclier}" FontFamily="FaSolid" FontAttributes="None" />
+                                <Span Text="&#160;&#160;Paiement sans contact ou espèces au retrait" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

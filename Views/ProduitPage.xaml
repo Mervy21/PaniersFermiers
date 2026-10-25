@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PaniersFermiers.Views.ProduitPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource PfFond}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- En-tête -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="12,40,20,8">
+            <Button Style="{StaticResource BoutonLien}" WidthRequest="44" HeightRequest="44"
+                    SemanticProperties.Description="Retour"
+                    Command="{Binding RetourCommand}">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcRetour}"
+                                     Color="{StaticResource PfTexte}" Size="20" />
+                </Button.ImageSource>
+            </Button>
+            <Label Grid.Column="1" Text="Fiche produit" FontSize="18" FontAttributes="Bold"
+                   TextColor="{StaticResource PfTexte}" VerticalOptions="Center" />
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,8,20,16" Spacing="14">
+
+                <!-- Grande vignette colorée selon la catégorie -->
+                <Border BackgroundColor="#DDF3D8" StrokeThickness="0"
+                        StrokeShape="RoundRectangle 24" HeightRequest="190">
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding Categorie}" Value="Fruits">
+                            <Setter Property="BackgroundColor" Value="#FFE8C8" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Border" Binding="{Binding Categorie}" Value="Tubercules">
+                            <Setter Property="BackgroundColor" Value="#F1E4CF" />
+                        </DataTrigger>
+                    </Border.Triggers>
+                    <Label Text="{Binding Emoji}" FontSize="96"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="{Binding Nom}" FontSize="26" FontAttributes="Bold"
+                           TextColor="{StaticResource PfTexte}" VerticalOptions="Center" />
+                    <Border Grid.Column="1" BackgroundColor="{StaticResource PfVertClair}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="12,6">
+                        <Label Text="{Binding PrixKgTexte}" FontSize="14" FontAttributes="Bold"
+                               TextColor="{StaticResource PfVertFonce}" />
+                    </Border>
+                </Grid>
+
+                <!-- Pastilles d'information -->
+                <HorizontalStackLayout Spacing="8">
+                    <Border BackgroundColor="{StaticResource PfGris}" StrokeThickness="0"
+                            StrokeShape="RoundRectangle 14" Padding="10,5">
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="{StaticResource IcLocalisation}" FontFamily="FaSolid" FontSize="11"
+                                   TextColor="{StaticResource PfVert}" VerticalOptions="Center" />
+                            <Label Text="{Binding OrigineTexte}" FontSize="12"
+                                   TextColor="{StaticResource PfTexteSecondaire}" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+                    <Border BackgroundColor="{StaticResource PfGris}" StrokeThickness="0"
+                            StrokeShape="RoundRectangle 14" Padding="10,5">
+                        <Label FontSize="12" TextColor="{StaticResource PfTexteSecondaire}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{StaticResource IcPousse}" FontFamily="FaSolid" FontAttributes="None" TextColor="{StaticResource PfVert}" />
+                                    <Span Text="&#160;&#160;Produit local" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Border>
+                    <Border BackgroundColor="{StaticResource PfGris}" StrokeThickness="0"
+                            StrokeShape="RoundRectangle 14" Padding="10,5">
+                        <Label FontSize="12" TextColor="{StaticResource PfTexteSecondaire}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{StaticResource IcSoleil}" FontFamily="FaSolid" FontAttributes="None" TextColor="{StaticResource PfVert}" />
+                                    <Span Text="&#160;&#160;Frais du jour" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Border>
+                </HorizontalStackLayout>
+
+                <!-- Hors saison -->
+                <Border BackgroundColor="#FDECEA" Stroke="#F5C6C2" StrokeShape="RoundRectangle 10"
+                        Padding="12,10" IsVisible="{Binding Epuise}">
+                    <Label Text="Ce produit est hors saison pour le moment."
+                           FontSize="13" TextColor="{StaticResource PfErreur}" />
+                </Border>
+
+                <Label Text="{Binding Description}" FontSize="15"
+                       TextColor="{StaticResource PfTexteSecondaire}" />
+
+                <!-- Choix de la quantité -->
+                <Border Style="{StaticResource Carte}">
+                    <Grid ColumnDefinitions="*,Auto" Padding="16">
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="Quantité" FontSize="16" FontAttributes="Bold"
+                                   TextColor="{StaticResource PfTexte}" />
+                            <Label Text="Par pas de 0.5 kg" FontSize="12"
+                                   TextColor="{StaticResource PfTexteSecondaire}" />
+                        </VerticalStackLayout>
+                        <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                            <Button Text="−" Style="{StaticResource BoutonRond}"
+                                    Command="{Binding DiminuerCommand}"
+                                    IsEnabled="{Binding PeutDiminuer}" />
+                            <Label Text="{Binding QuantiteTexte}" FontSize="17" FontAttributes="Bold"
+                                   WidthRequest="64" HorizontalTextAlignment="Center"
+                                   TextColor="{StaticResource PfTexte}" VerticalOptions="Center" />
+                            <Button Text="+" Style="{StaticResource BoutonRond}"
+                                    Command="{Binding AugmenterCommand}"
+                                    IsEnabled="{Binding PeutAugmenter}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Label FontSize="13" TextColor="{StaticResource PfTexteSecondaire}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{StaticResource IcCarte}" FontFamily="FaSolid" FontAttributes="None" TextColor="{StaticResource PfVert}" />
+                            <Span Text="&#160;&#160;Paiement à la remise, au point de retrait." />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bouton fixe en bas -->
+        <Button Grid.Row="2" Text="{Binding TexteAjout}" Style="{StaticResource BoutonPrincipal}"
+                Command="{Binding AjouterCommand}" IsEnabled="{Binding Disponible}"
+                Margin="20,8,20,24" />
+    </Grid>
+</ContentPage>

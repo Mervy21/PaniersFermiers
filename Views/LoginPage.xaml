@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PaniersFermiers.Views.LoginPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource PfFond}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,48,24,24" Spacing="0">
+
+            <Label FontSize="18" FontAttributes="Bold" TextColor="{StaticResource PfVertFonce}">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="{StaticResource IcPanier}" FontFamily="FaSolid" FontAttributes="None" />
+                        <Span Text="&#160;&#160;PaniersFermiers" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label Text="Connexion" Style="{StaticResource TitreEcran}" Margin="0,28,0,4" />
+            <Label Text="Retrouvez vos paniers en direct des fermes locales"
+                   Style="{StaticResource SousTitre}" />
+
+            <!-- Identifiant -->
+            <Label Text="Email ou Téléphone portable" Style="{StaticResource LabelChamp}" Margin="0,24,0,6" />
+            <Border Style="{StaticResource ChampBorder}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" Binding="{Binding Identifiant.AErreur}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource PfErreur}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Entry Style="{StaticResource ChampEntry}"
+                       Placeholder="ex : nom@exemple.cm ou 6 90 12 34 56"
+                       Text="{Binding Identifiant.Valeur}"
+                       IsEnabled="{Binding FormulaireActif}" />
+            </Border>
+            <Label Text="{Binding Identifiant.Erreur}" IsVisible="{Binding Identifiant.AErreur}"
+                   Style="{StaticResource TexteErreur}" />
+
+            <!-- Mot de passe -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,16,0,6">
+                <Label Text="Mot de passe" Style="{StaticResource LabelChamp}" Margin="0"
+                       VerticalOptions="Center" />
+                <Button Grid.Column="1" Text="Mot de passe oublié ?"
+                        Style="{StaticResource BoutonLien}"
+                        Command="{Binding MotDePasseOublieCommand}" />
+            </Grid>
+            <Border Style="{StaticResource ChampBorder}">
+                <Border.Triggers>
+                    <DataTrigger TargetType="Border" Binding="{Binding MotDePasse.AErreur}" Value="True">
+                        <Setter Property="Stroke" Value="{StaticResource PfErreur}" />
+                    </DataTrigger>
+                </Border.Triggers>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Entry Style="{StaticResource ChampEntry}"
+                           Placeholder="Votre clé secrète"
+                           IsPassword="{Binding MotDePasseCache}"
+                           Text="{Binding MotDePasse.Valeur}"
+                           IsEnabled="{Binding FormulaireActif}" />
+                    <Button Grid.Column="1" Text="{Binding TexteAffichage}"
+                            Style="{StaticResource BoutonLien}"
+                            Command="{Binding BasculerMotDePasseCommand}" />
+                </Grid>
+            </Border>
+            <Label Text="{Binding MotDePasse.Erreur}" IsVisible="{Binding MotDePasse.AErreur}"
+                   Style="{StaticResource TexteErreur}" />
+
+            <!-- Erreur générale -->
+            <Border Style="{StaticResource BandeauErreur}" IsVisible="{Binding AErreurGenerale}">
+                <Label Text="{Binding ErreurGenerale}" Style="{StaticResource TexteErreur}" Margin="0" />
+            </Border>
+
+            <!-- Bouton -->
+            <Button Text="{Binding TexteBouton}" Style="{StaticResource BoutonPrincipal}"
+                    Command="{Binding SeConnecterCommand}"
+                    IsEnabled="{Binding FormulaireActif}"
+                    Margin="0,24,0,0" />
+
+            <Label Text="Pas encore de compte fermier ou adhérent ?"
+                   Style="{StaticResource Texte}" HorizontalOptions="Center" Margin="0,32,0,0" />
+            <Button Text="S'inscrire" Style="{StaticResource BoutonLien}" FontSize="16"
+                    HorizontalOptions="Center" Command="{Binding InscriptionCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

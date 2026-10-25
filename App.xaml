@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:PaniersFermiers"
+             x:Class="PaniersFermiers.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- ===== COULEURS ===== -->
+            <Color x:Key="PfVertFonce">#18441F</Color>
+            <Color x:Key="PfVert">#3A6B47</Color>
+            <Color x:Key="PfVertClair">#B8F0C4</Color>
+            <Color x:Key="PfFond">#F4F9F4</Color>
+            <Color x:Key="PfGris">#EBF0EB</Color>
+            <Color x:Key="PfBordure">#DCE6DC</Color>
+            <Color x:Key="PfTexte">#1A1C1A</Color>
+            <Color x:Key="PfTexteSecondaire">#5A625A</Color>
+            <Color x:Key="PfPlaceholder">#8A938A</Color>
+            <Color x:Key="PfErreur">#C62828</Color>
+            <Color x:Key="PfDesactive">#9DB3A0</Color>
+
+            <!-- ===== ICÔNES (police Font Awesome Free, alias « FaSolid ») ===== -->
+            <x:String x:Key="IcPanier">&#xF291;</x:String>
+            <x:String x:Key="IcBoite">&#xF466;</x:String>
+            <x:String x:Key="IcBoiteOuverte">&#xF49E;</x:String>
+            <x:String x:Key="IcUtilisateur">&#xF007;</x:String>
+            <x:String x:Key="IcLoupe">&#xF002;</x:String>
+            <x:String x:Key="IcFeuille">&#xF06C;</x:String>
+            <x:String x:Key="IcPousse">&#xF4D8;</x:String>
+            <x:String x:Key="IcLocalisation">&#xF3C5;</x:String>
+            <x:String x:Key="IcCalendrier">&#xF073;</x:String>
+            <x:String x:Key="IcCalendrierAjout">&#xF271;</x:String>
+            <x:String x:Key="IcHorloge">&#xF017;</x:String>
+            <x:String x:Key="IcTelephone">&#xF095;</x:String>
+            <x:String x:Key="IcCheck">&#xF00C;</x:String>
+            <x:String x:Key="IcCroix">&#xF00D;</x:String>
+            <x:String x:Key="IcPoubelle">&#xF2ED;</x:String>
+            <x:String x:Key="IcCadenas">&#xF023;</x:String>
+            <x:String x:Key="IcBouclier">&#xF3ED;</x:String>
+            <x:String x:Key="IcCarte">&#xF09D;</x:String>
+            <x:String x:Key="IcBillets">&#xF53A;</x:String>
+            <x:String x:Key="IcMobile">&#xF3CD;</x:String>
+            <x:String x:Key="IcRecu">&#xF543;</x:String>
+            <x:String x:Key="IcSoleil">&#xF185;</x:String>
+            <x:String x:Key="IcSac">&#xF290;</x:String>
+            <x:String x:Key="IcAide">&#xF590;</x:String>
+            <x:String x:Key="IcRetour">&#xF060;</x:String>
+
+            <!-- ===== TEXTES ===== -->
+            <Style x:Key="TitreEcran" TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PfTexte}" />
+            </Style>
+            <Style x:Key="SousTitre" TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="TextColor" Value="{StaticResource PfTexteSecondaire}" />
+            </Style>
+            <Style x:Key="Texte" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="TextColor" Value="{StaticResource PfTexte}" />
+            </Style>
+            <Style x:Key="LabelChamp" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource PfTexte}" />
+                <Setter Property="Margin" Value="0,16,0,6" />
+            </Style>
+            <Style x:Key="TexteErreur" TargetType="Label">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="TextColor" Value="{StaticResource PfErreur}" />
+                <Setter Property="Margin" Value="2,4,0,0" />
+            </Style>
+
+            <!-- ===== CHAMPS ===== -->
+            <Style x:Key="ChampBorder" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource PfBordure}" />
+                <Setter Property="StrokeThickness" Value="1.5" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+                <Setter Property="Padding" Value="12,0" />
+            </Style>
+            <Style x:Key="ChampEntry" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{StaticResource PfTexte}" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource PfPlaceholder}" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="HeightRequest" Value="50" />
+            </Style>
+            <Style x:Key="BandeauErreur" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="#FDECEA" />
+                <Setter Property="Stroke" Value="#F5C6C2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+                <Setter Property="Padding" Value="12,10" />
+                <Setter Property="Margin" Value="0,12,0,0" />
+            </Style>
+
+            <!-- ===== BOUTONS ===== -->
+            <Style x:Key="BoutonPrincipal" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource PfVertFonce}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="HeightRequest" Value="52" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="Opacity" Value="0.85" />
+                                    <Setter Property="Scale" Value="0.97" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource PfDesactive}" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+            <Style x:Key="BoutonLien" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="{StaticResource PfVert}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Padding" Value="4,0" />
+                <Setter Property="HeightRequest" Value="40" />
+            </Style>
+            <Style x:Key="Chip" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource PfGris}" />
+                <Setter Property="TextColor" Value="{StaticResource PfTexteSecondaire}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="HeightRequest" Value="40" />
+                <Setter Property="Padding" Value="16,0" />
+                <Setter Property="Shadow">
+                    <Shadow Brush="Black" Offset="0,1" Radius="4" Opacity="0.10" />
+                </Setter>
+            </Style>
+
+            <Style x:Key="BoutonRond" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource PfVertClair}" />
+                <Setter Property="TextColor" Value="{StaticResource PfVertFonce}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="19" />
+                <Setter Property="WidthRequest" Value="38" />
+                <Setter Property="HeightRequest" Value="38" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Shadow">
+                    <Shadow Brush="Black" Offset="0,2" Radius="6" Opacity="0.18" />
+                </Setter>
+
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource PfGris}" />
+                                    <Setter Property="TextColor" Value="{StaticResource PfDesactive}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+            <Style x:Key="BoutonSecondaire" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource PfVertFonce}" />
+                <Setter Property="BorderColor" Value="{StaticResource PfVertFonce}" />
+                <Setter Property="BorderWidth" Value="1.5" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Shadow">
+                    <Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.12" />
+                </Setter>
+            </Style>
+
+
+
+            <Style x:Key="Carte" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="Stroke" Value="{StaticResource PfBordure}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 16" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="#18441F" Opacity="0.08" Radius="18" Offset="0,6" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

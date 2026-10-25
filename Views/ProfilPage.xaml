@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PaniersFermiers.Views.ProfilPage"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource PfFond}">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- En-tête -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="12,40,20,8">
+            <Button Style="{StaticResource BoutonLien}" WidthRequest="44" HeightRequest="44"
+                    SemanticProperties.Description="Retour"
+                    Command="{Binding RetourCommand}">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcRetour}"
+                                     Color="{StaticResource PfTexte}" Size="20" />
+                </Button.ImageSource>
+            </Button>
+            <Label Grid.Column="1" Text="Mon profil" FontSize="18" FontAttributes="Bold"
+                   TextColor="{StaticResource PfTexte}" VerticalOptions="Center" />
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,8,20,24" Spacing="16">
+
+                <!-- Avatar + identité -->
+                <Border Style="{StaticResource Carte}" Padding="20">
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <Border WidthRequest="80" HeightRequest="80" StrokeThickness="0"
+                                StrokeShape="RoundRectangle 40" HorizontalOptions="Center"
+                                BackgroundColor="{StaticResource PfVertFonce}">
+                            <Label Text="{Binding Initiales}" FontSize="28" FontAttributes="Bold"
+                                   TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <Label Text="{Binding NomComplet}" FontSize="20" FontAttributes="Bold"
+                               TextColor="{StaticResource PfTexte}" HorizontalOptions="Center" Margin="0,8,0,0" />
+                        <Label Text="{Binding Email}" Style="{StaticResource SousTitre}" HorizontalOptions="Center" />
+                        <Label Text="{Binding Telephone}" Style="{StaticResource SousTitre}" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Statistiques -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Border Style="{StaticResource Carte}" Padding="16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding NombreCommandesTexte}" FontSize="24" FontAttributes="Bold"
+                                   TextColor="{StaticResource PfVertFonce}" />
+                            <Label Text="Commandes" Style="{StaticResource SousTitre}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource Carte}" Padding="16">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding TotalDepenseTexte}" FontSize="18" FontAttributes="Bold"
+                                   TextColor="{StaticResource PfVertFonce}" />
+                            <Label Text="Total dépensé" Style="{StaticResource SousTitre}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Actions -->
+                <Button Text="Mes commandes" Style="{StaticResource BoutonSecondaire}"
+                        ContentLayout="Left,8"
+                        Command="{Binding MesCommandesCommand}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcBoite}"
+                                         Color="{StaticResource PfVertFonce}" Size="16" />
+                    </Button.ImageSource>
+                </Button>
+                <Button Text="Aide &amp; contact" Style="{StaticResource BoutonSecondaire}"
+                        ContentLayout="Left,8"
+                        Command="{Binding AideCommand}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="FaSolid" Glyph="{StaticResource IcAide}"
+                                         Color="{StaticResource PfVertFonce}" Size="16" />
+                    </Button.ImageSource>
+                </Button>
+                <Button Text="Se déconnecter" Style="{StaticResource BoutonLien}"
+                        TextColor="{StaticResource PfErreur}" HorizontalOptions="Center" Margin="0,8,0,0"
+                        Command="{Binding DeconnexionCommand}" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
